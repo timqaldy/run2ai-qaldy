@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { fileUrl } from "@/lib/format";
 import type { EventInfo, Settings, Testimonial } from "@/types";
+import { ConfirmButton } from "./ConfirmButton";
 
 const input =
   "mt-1.5 block min-h-11 w-full rounded-xl border border-white/15 bg-night px-3 text-white focus:border-cyan focus:outline-none";
@@ -233,7 +234,6 @@ function ImageSetting({
   }
 
   async function remove() {
-    if (!window.confirm("Удалить изображение?")) return;
     setBusy(true);
     try {
       const res = await fetch(`/api/admin/upload?kind=${kind}`, { method: "DELETE" });
@@ -274,9 +274,14 @@ function ImageSetting({
             />
           </label>
           {preview ? (
-            <button type="button" disabled={busy} onClick={remove} className="rounded-xl bg-white/5 px-4 py-2.5 font-semibold text-red-300 hover:bg-white/10">
-              Удалить
-            </button>
+            <ConfirmButton
+              label="Удалить"
+              confirmLabel="Точно удалить?"
+              disabled={busy}
+              onConfirm={remove}
+              className="rounded-xl bg-white/5 px-4 py-2.5 font-semibold text-red-300 hover:bg-white/10"
+              armedClassName="rounded-xl bg-red-500 px-4 py-2.5 font-bold text-white"
+            />
           ) : null}
           <span className="text-xs text-mist">PNG / JPG / WEBP, до 5 МБ</span>
         </div>
@@ -315,7 +320,6 @@ function TestimonialsManager({ initial }: { initial: Testimonial[] }) {
   }
 
   async function remove(id: string) {
-    if (!window.confirm("Удалить отзыв?")) return;
     await fetch(`/api/admin/testimonials?id=${id}`, { method: "DELETE" });
     setItems((prev) => prev.filter((t) => t.id !== id));
   }
@@ -367,7 +371,7 @@ function TestimonialsManager({ initial }: { initial: Testimonial[] }) {
             </div>
             <div className="flex shrink-0 gap-2 text-sm">
               <button type="button" className="text-cyan underline" onClick={() => setDraft({ id: t.id, name: t.name, quote: t.quote, rating: t.rating, published: t.published, photo_key: t.photo_key })}>Изменить</button>
-              <button type="button" className="text-red-300 underline" onClick={() => remove(t.id)}>Удалить</button>
+              <ConfirmButton label="Удалить" confirmLabel="Точно?" onConfirm={() => remove(t.id)} className="text-red-300 underline" armedClassName="rounded bg-red-500 px-2 font-bold text-white" />
             </div>
           </li>
         ))}

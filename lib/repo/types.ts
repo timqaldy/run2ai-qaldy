@@ -20,6 +20,7 @@ export interface Repo {
   listRegistrations(): Promise<Registration[]>;
   getRegistration(id: string): Promise<Registration | null>;
   updateRegistration(id: string, patch: RegistrationPatch): Promise<Registration | null>;
+  deleteRegistration(id: string): Promise<void>;
   countPaid(): Promise<number>;
   createTicket(ticket: Ticket): Promise<Ticket>;
   getTicketByCode(code: string): Promise<Ticket | null>;

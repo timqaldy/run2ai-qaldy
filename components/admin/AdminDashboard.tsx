@@ -5,6 +5,7 @@ import { Fragment, useMemo, useState } from "react";
 import { track } from "@/lib/analytics";
 import { formatDateTime, formatPrice, ticketMessage } from "@/lib/format";
 import { whatsappLink } from "@/lib/phone";
+import { ConfirmButton } from "./ConfirmButton";
 import type { EventInfo, Registration, RegistrationStatus, Settings } from "@/types";
 
 const STATUS_LABEL: Record<RegistrationStatus, string> = {
@@ -97,10 +98,29 @@ export function AdminDashboard({
     }
   }
 
-  async function confirm(r: Registration) {
-    if (!window.confirm(`Подтвердить оплату ${formatPrice(event.price, event.currency)} от ${r.name}? Проверьте чек в WhatsApp.`)) return;
+  async function confirmPaid(r: Registration) {
     const updated = await act(r.id, { action: "confirm_payment" });
     if (updated) track("payment_confirmed", { number: r.number });
+  }
+
+  async function remove(r: Registration) {
+    setBusyId(r.id);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/registrations/${r.id}`, { method: "DELETE" });
+      if (res.status === 401) router.push("/admin/login");
+      const data = (await res.json()) as { ok: boolean; message?: string };
+      if (!data.ok) {
+        setError(data.message || "Не удалось удалить");
+        return;
+      }
+      setRows((prev) => prev.filter((x) => x.id !== r.id));
+      if (openId === r.id) setOpenId(null);
+    } catch {
+      setError("Нет соединения");
+    } finally {
+      setBusyId(null);
+    }
   }
 
   function sendTicket(r: Registration) {
@@ -221,9 +241,14 @@ export function AdminDashboard({
                     <td className="px-3 py-3">
                       <div className="flex flex-col gap-1.5">
                         {!paid && r.status !== "cancelled" ? (
-                          <button type="button" disabled={busy} onClick={() => confirm(r)} className="rounded-lg bg-emerald-500 px-3 py-1.5 font-bold text-night disabled:opacity-50">
-                            Подтвердить оплату
-                          </button>
+                          <ConfirmButton
+                            label="Подтвердить оплату"
+                            confirmLabel={`Да, оплачено ${formatPrice(event.price, event.currency)} ✓`}
+                            disabled={busy}
+                            onConfirm={() => confirmPaid(r)}
+                            className="rounded-lg bg-emerald-500 px-3 py-1.5 font-bold text-night"
+                            armedClassName="rounded-lg bg-emerald-300 px-3 py-1.5 font-bold text-night ring-2 ring-emerald-200"
+                          />
                         ) : null}
                         {paid && ticketHref ? (
                           <a
@@ -236,6 +261,14 @@ export function AdminDashboard({
                             {r.status === "ticket_sent" ? "Отправить билет ещё раз" : "Отправить билет в WhatsApp"}
                           </a>
                         ) : null}
+                        <ConfirmButton
+                          label="Удалить"
+                          confirmLabel="Точно удалить?"
+                          disabled={busy}
+                          onConfirm={() => remove(r)}
+                          className="rounded-lg px-3 py-1 text-xs font-semibold text-red-300 hover:bg-red-500/10"
+                          armedClassName="rounded-lg bg-red-500 px-3 py-1.5 text-xs font-bold text-white"
+                        />
                       </div>
                     </td>
                   </tr>
@@ -253,7 +286,7 @@ export function AdminDashboard({
         </table>
       </div>
       <p className="mt-3 text-xs text-mist">
-        Kaspi QR не подключён к банковскому API: подтверждайте оплату только после проверки чека. Кнопка «Отправить билет»
+        Kaspi QR не подключён к банковскому API: подтверждайте оплату только после проверки чека. «Подтвердить оплату» закрепляет место за участником и создаёт билет. Кнопки подтверждения и удаления срабатывают по второму нажатию. Кнопка «Отправить билет»
         открывает WhatsApp с готовым сообщением — отправьте его вручную.
       </p>
     </main>

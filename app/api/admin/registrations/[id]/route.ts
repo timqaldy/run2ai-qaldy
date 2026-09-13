@@ -23,6 +23,16 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   let whatsappUrl: string | null = null;
 
   if (action.action === "confirm_payment") {
+    const alreadyPaid = current.status === "paid" || current.status === "ticket_sent";
+    if (!alreadyPaid) {
+      const [event, settings, paid] = await Promise.all([repo.getEvent(), repo.getSettings(), repo.countPaid()]);
+      if (paid + settings.offline_paid_seats >= event.capacity) {
+        return NextResponse.json(
+          { ok: false, message: "Свободных мест нет: увеличьте Capacity или уменьшите «Занято мест вне сайта»" },
+          { status: 409 },
+        );
+      }
+    }
     registration = (await confirmPayment(id)) ?? current;
   } else if (action.action === "mark_ticket_sent") {
     if (!current.ticket_url) {
@@ -62,4 +72,17 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
 
   return NextResponse.json({ ok: true, registration, whatsappUrl });
+}
+
+export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { response } = await requireAdminApi();
+  if (response) return response;
+
+  const { id } = await params;
+  const repo = await getRepo();
+  const current = await repo.getRegistration(id);
+  if (!current) return NextResponse.json({ ok: false, message: "Заявка не найдена" }, { status: 404 });
+  await repo.deleteRegistration(id);
+  console.log(JSON.stringify({ admin: "registration_deleted", registration: current.number, status: current.status }));
+  return NextResponse.json({ ok: true });
 }

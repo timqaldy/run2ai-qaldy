@@ -106,6 +106,12 @@ export function createLocalRepo(): Repo {
         return next;
       });
     },
+    async deleteRegistration(id) {
+      await mutate((db) => {
+        db.tickets = db.tickets.filter((t) => t.registration_id !== id);
+        db.registrations = db.registrations.filter((r) => r.id !== id);
+      });
+    },
     async countPaid() {
       return (await read()).registrations.filter((r) =>
         (PAID_STATUSES as readonly string[]).includes(r.status),

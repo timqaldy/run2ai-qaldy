@@ -121,6 +121,10 @@ export function createD1Repo(db: D1Like, bucket: R2Like | undefined): Repo {
       }
       return getRegistration(id);
     },
+    async deleteRegistration(id) {
+      await db.prepare("DELETE FROM tickets WHERE registration_id = ?").bind(id).run();
+      await db.prepare("DELETE FROM registrations WHERE id = ?").bind(id).run();
+    },
     async countPaid() {
       const row = await db
         .prepare(`SELECT COUNT(*) AS count FROM registrations WHERE status IN (${PAID_STATUSES.map(() => "?").join(", ")})`)

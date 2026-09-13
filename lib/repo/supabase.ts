@@ -97,6 +97,12 @@ export function createSupabaseRepo(): Repo {
       fail(error);
       return getRegistration(id);
     },
+    async deleteRegistration(id) {
+      const tickets = await client.from("tickets").delete().eq("registration_id", id);
+      fail(tickets.error);
+      const { error } = await client.from("registrations").delete().eq("id", id);
+      fail(error);
+    },
     async countPaid() {
       const { count, error } = await client
         .from("registrations")
