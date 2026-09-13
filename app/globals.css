@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@theme {
+  --color-night: #020814;
+  --color-deep: #041526;
+  --color-panel: #06203a;
+  --color-electric: #00aeef;
+  --color-cyan: #00d4ff;
+  --color-mist: #9fb6cc;
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-display: var(--font-heading), "Arial Black", system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-night);
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(60rem 40rem at 85% -10%, rgb(0 174 239 / 0.18), transparent 60%),
+    radial-gradient(40rem 30rem at -10% 40%, rgb(0 212 255 / 0.08), transparent 60%),
+    var(--color-night);
+}
+
+.grunge {
+  position: relative;
+  isolation: isolate;
+}
+
+.grunge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.brush {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 24' preserveAspectRatio='none'%3E%3Cpath d='M4 16c40-9 120-13 200-11 30 1 60 3 92 1-28 6-70 9-120 10-60 2-120 4-172 6z' fill='%2300AEEF'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 0.42em;
+  padding-bottom: 0.14em;
+}
+
+.glow {
+  box-shadow:
+    0 0 0 1px rgb(0 212 255 / 0.35),
+    0 0 24px rgb(0 174 239 / 0.25);
+}
+
+.text-glow {
+  text-shadow: 0 0 18px rgb(0 212 255 / 0.45);
+}
+
+.cta {
+  background: linear-gradient(180deg, #19c3ff, #00aeef 55%, #0092d0);
+  box-shadow:
+    0 10px 30px -8px rgb(0 174 239 / 0.7),
+    inset 0 1px 0 rgb(255 255 255 / 0.35);
+}
+
+.cta:hover {
+  filter: brightness(1.08);
+}
+
+.fade-bottom {
+  mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.5s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+}
+
+@media print {
+  body {
+    background: #fff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

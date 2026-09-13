@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "run2ai-qaldy",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-08-19",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "observability": { "enabled": true },
+  "vars": {
+    "NEXT_PUBLIC_SITE_URL": "https://run2ai.qaldy.com",
+    "ADMIN_EMAIL": "timqaldy@gmail.com"
+  },
+  "routes": [{ "pattern": "run2ai.qaldy.com", "custom_domain": true }],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "run2ai-registrations",
+      "database_id": "ef23d493-492c-4297-974b-f87c323d3e26",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [{ "binding": "FILES", "bucket_name": "run2ai-uploads" }]
+}
