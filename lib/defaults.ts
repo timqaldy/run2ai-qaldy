@@ -28,6 +28,9 @@ export const defaultSettings: Settings = {
   qr_active: true,
   hero_image_key: null,
   cta_text: "Записаться",
+  offline_paid_seats: 0,
+  posthog_key: null,
+  posthog_host: "https://eu.i.posthog.com",
   confirmation_text:
     "Отправьте чек в WhatsApp. После подтверждения оплаты мы пришлём ваш билет туда же.",
 };

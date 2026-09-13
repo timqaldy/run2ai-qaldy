@@ -45,6 +45,6 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (parsed.data.event === "whatsapp_receipt_click") {
     await repo.updateRegistration(id, { receipt_clicked_at: new Date().toISOString() });
   }
-  trackServer(parsed.data.event, { registration: registration.number });
+  await trackServer(parsed.data.event, { registration: registration.number });
   return NextResponse.json({ ok: true });
 }

@@ -89,6 +89,14 @@ export const settingsSchema = z.object({
         }
       }, "Ссылка должна вести на kaspi.kz (https)"),
     cta_text: z.string().trim().min(2).max(40),
+    offline_paid_seats: z.coerce.number().int().min(0).max(10000),
+    posthog_key: z
+      .string()
+      .trim()
+      .nullable()
+      .transform((v) => v || null)
+      .refine((v) => !v || /^phc_[A-Za-z0-9]{20,80}$/.test(v), "Ключ PostHog начинается с phc_"),
+    posthog_host: z.enum(["https://eu.i.posthog.com", "https://us.i.posthog.com"]),
     confirmation_text: z.string().trim().min(5).max(500),
   }),
 });

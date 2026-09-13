@@ -9,12 +9,20 @@ function Sticker({ src, alt, w, h }: { src: string; alt: string; w: number; h: n
   );
 }
 
+function seatsWord(n: number) {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return "место";
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return "места";
+  return "мест";
+}
+
 function SeatsLine({ state, className = "" }: { state: PublicState; className?: string }) {
   return (
     <p className={`font-display text-sm font-extrabold uppercase tracking-wider text-cyan ${className}`}>
       {state.soldOut
         ? "Все места заняты"
-        : `Осталось ${state.seatsLeft} из ${state.event.capacity} мест`}
+        : `Осталось ${state.seatsLeft} ${seatsWord(state.seatsLeft)} из ${state.event.capacity}`}
     </p>
   );
 }

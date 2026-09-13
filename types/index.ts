@@ -34,6 +34,9 @@ export type Settings = {
   hero_image_key: string | null;
   cta_text: string;
   confirmation_text: string;
+  offline_paid_seats: number;
+  posthog_key: string | null;
+  posthog_host: "https://eu.i.posthog.com" | "https://us.i.posthog.com";
 };
 
 export type Registration = {

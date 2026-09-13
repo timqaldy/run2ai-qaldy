@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
   try {
     const registration = await createLead(parsed.data);
-    trackServer("registration_completed", { registration: registration.number });
+    await trackServer("registration_completed", { registration: registration.number });
     return NextResponse.json({
       ok: true,
       registration: {

@@ -1,12 +1,14 @@
 import { siteUrl } from "@/lib/format";
 import { accessToken, registrationNumber, ticketCode } from "@/lib/ids";
 import { normalizePhone } from "@/lib/phone";
+import { capturePosthog } from "@/lib/posthog";
 import { getRepo } from "@/lib/repo";
 import type { EventInfo, Registration, Settings, Testimonial } from "@/types";
 
 export type PublicState = {
   event: EventInfo;
   settings: Omit<Settings, "ticket_message_template">;
+  posthog: { key: string; host: string } | null;
   paid: number;
   seatsLeft: number;
   soldOut: boolean;
@@ -22,12 +24,14 @@ export async function getPublicState(): Promise<PublicState> {
     repo.countPaid(),
     repo.listTestimonials(true),
   ]);
-  const seatsLeft = Math.max(0, event.capacity - paid);
+  const seatsLeft = Math.max(0, event.capacity - paid - settings.offline_paid_seats);
+  const posthogKey = process.env.POSTHOG_KEY || settings.posthog_key;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ticket_message_template, ...publicSettings } = settings;
   return {
     event,
     settings: publicSettings,
+    posthog: posthogKey ? { key: posthogKey, host: process.env.POSTHOG_HOST || settings.posthog_host } : null,
     paid,
     seatsLeft,
     soldOut: seatsLeft === 0,
@@ -46,8 +50,8 @@ export async function createLead(input: {
   referrer?: string;
 }) {
   const repo = await getRepo();
-  const [event, paid] = await Promise.all([repo.getEvent(), repo.countPaid()]);
-  const soldOut = paid >= event.capacity;
+  const [event, paid, settings] = await Promise.all([repo.getEvent(), repo.countPaid(), repo.getSettings()]);
+  const soldOut = paid + settings.offline_paid_seats >= event.capacity;
   const phone = normalizePhone(input.phone);
 
   for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -113,11 +117,14 @@ export async function confirmPayment(id: string): Promise<Registration | null> {
     ticket_id: ticket.code,
     ticket_url: `${siteUrl()}/ticket/${ticket.code}`,
   });
-  trackServer("payment_confirmed", { registration: registration.number });
+  await trackServer("payment_confirmed", { registration: registration.number });
   return updated;
 }
 
-export function trackServer(event: string, props: Record<string, string> = {}) {
-  // Hook for GA4 Measurement Protocol / Meta CAPI once credentials exist.
+export async function trackServer(event: string, props: { registration: string } & Record<string, string>) {
   console.log(JSON.stringify({ analytics: event, ...props, at: new Date().toISOString() }));
+  // Funnel steps are captured in the browser; only admin-side events go from the server to avoid double counting.
+  if (event === "payment_confirmed" || event === "ticket_sent") {
+    await capturePosthog(event, props.registration, props);
+  }
 }

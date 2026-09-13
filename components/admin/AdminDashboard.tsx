@@ -56,9 +56,9 @@ export function AdminDashboard({
       waiting: count("new", "waiting_payment", "receipt_received"),
       paid,
       sent: count("ticket_sent"),
-      free: Math.max(0, event.capacity - paid),
+      free: Math.max(0, event.capacity - paid - settings.offline_paid_seats),
     };
-  }, [rows, event.capacity]);
+  }, [rows, event.capacity, settings.offline_paid_seats]);
 
   const visible = rows.filter((r) => {
     if (filter === "open" && !["new", "waiting_payment", "receipt_received"].includes(r.status)) return false;

@@ -70,6 +70,9 @@ export function SettingsForm({
             whatsapp_message_template: settings.whatsapp_message_template,
             ticket_message_template: settings.ticket_message_template,
             payment_instructions: settings.payment_instructions,
+            offline_paid_seats: settings.offline_paid_seats,
+            posthog_key: settings.posthog_key,
+            posthog_host: settings.posthog_host,
             qr_active: settings.qr_active,
             kaspi_pay_link: settings.kaspi_pay_link,
             cta_text: settings.cta_text,
@@ -102,6 +105,9 @@ export function SettingsForm({
           </Field>
           <Field label="Capacity" hint="Считаются только оплаченные заявки">
             <input type="number" min={1} className={input} value={event.capacity} onChange={(e) => ev("capacity", Number(e.target.value))} />
+          </Field>
+          <Field label="Занято мест вне сайта" hint="Реально оплаченные напрямую (WhatsApp, наличные). Вычитается из свободных мест">
+            <input type="number" min={0} className={input} value={settings.offline_paid_seats} onChange={(e) => st("offline_paid_seats", Number(e.target.value))} />
           </Field>
           <Field label="Price"><input type="number" min={0} className={input} value={event.price} onChange={(e) => ev("price", Number(e.target.value))} /></Field>
           <Field label="Currency"><input className={input} value={event.currency} onChange={(e) => ev("currency", e.target.value)} /></Field>
@@ -155,6 +161,18 @@ export function SettingsForm({
         ) : null}
         <Field label="Инструкция по оплате">
           <textarea rows={2} className={`${input} py-2`} value={settings.payment_instructions} onChange={(e) => st("payment_instructions", e.target.value)} />
+        </Field>
+      </Card>
+
+      <Card title="Аналитика · PostHog">
+        <Field label="Project API Key" hint="PostHog → Project settings → Project API Key (начинается с phc_). Имена и телефоны в PostHog не отправляются.">
+          <input className={input} placeholder="phc_..." value={settings.posthog_key ?? ""} onChange={(e) => st("posthog_key", e.target.value || null)} />
+        </Field>
+        <Field label="Регион">
+          <select className={input} value={settings.posthog_host} onChange={(e) => st("posthog_host", e.target.value as Settings["posthog_host"])}>
+            <option value="https://eu.i.posthog.com">EU (eu.posthog.com)</option>
+            <option value="https://us.i.posthog.com">US (us.posthog.com)</option>
+          </select>
         </Field>
       </Card>
 

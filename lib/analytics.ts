@@ -16,16 +16,25 @@ const META_MAP: Partial<Record<TrackingEvent, string>> = {
   payment_screen_opened: "AddPaymentInfo",
 };
 
+type PosthogLike = { capture: (e: string, p?: object) => void; identify: (id: string) => void };
+
+export function identify(distinctId: string) {
+  if (typeof window === "undefined") return;
+  (window as Window & { posthog?: PosthogLike }).posthog?.identify(distinctId);
+}
+
 export function track(event: TrackingEvent, props: Record<string, string | number> = {}) {
   if (typeof window === "undefined") return;
   const w = window as Window & {
     gtag?: (...args: unknown[]) => void;
     fbq?: (...args: unknown[]) => void;
     dataLayer?: unknown[];
+    posthog?: PosthogLike;
   };
   w.dataLayer = w.dataLayer || [];
   w.dataLayer.push({ event, ...props });
   w.gtag?.("event", event, props);
+  if (event !== "page_view") w.posthog?.capture(event, props);
   const meta = META_MAP[event];
   if (meta) w.fbq?.("track", meta, props);
   else w.fbq?.("trackCustom", event, props);

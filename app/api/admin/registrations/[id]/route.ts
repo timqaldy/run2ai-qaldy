@@ -35,7 +35,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     });
     if (delivery.mode === "manual_link") whatsappUrl = delivery.url;
     registration = (await repo.updateRegistration(id, { status: "ticket_sent" })) ?? current;
-    trackServer("ticket_sent", { registration: current.number, mode: delivery.mode });
+    await trackServer("ticket_sent", { registration: current.number, mode: delivery.mode });
   } else if (action.action === "set_status") {
     const paidLike = action.status === "paid" || action.status === "ticket_sent";
     if (paidLike && !current.ticket_url) {

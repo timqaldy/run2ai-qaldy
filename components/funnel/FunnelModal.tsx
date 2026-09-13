@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { captureUtm, track } from "@/lib/analytics";
+import { captureUtm, identify, track } from "@/lib/analytics";
 import { fileUrl, fillTemplate, formatPrice, templateValues } from "@/lib/format";
 import { whatsappLink } from "@/lib/phone";
 import type { PublicState } from "@/lib/service";
@@ -167,6 +167,7 @@ export function FunnelModal({ state, onClose }: { state: PublicState; onClose: (
             onDone={(registration) => {
               save(registration);
               setSaved(registration);
+              identify(registration.number);
               track("registration_completed", { number: registration.number });
               setStep(registration.status === "waitlist" ? "waitlist" : "payment");
             }}

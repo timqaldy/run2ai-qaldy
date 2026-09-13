@@ -1,4 +1,5 @@
 import { Analytics } from "@/components/Analytics";
+import { PostHog } from "@/components/PostHog";
 import { FunnelProvider } from "@/components/funnel/FunnelProvider";
 import { StickyCta } from "@/components/landing/Cta";
 import {
@@ -22,6 +23,7 @@ export default async function Home() {
   return (
     <FunnelProvider state={state}>
       <Analytics />
+      {state.posthog ? <PostHog apiKey={state.posthog.key} host={state.posthog.host} /> : null}
       <main>
         <Hero state={state} />
         <Pitch />
