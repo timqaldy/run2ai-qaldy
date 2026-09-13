@@ -73,6 +73,21 @@ export const settingsSchema = z.object({
     ticket_message_template: z.string().trim().min(5).max(1500),
     payment_instructions: z.string().trim().max(500),
     qr_active: z.boolean(),
+    kaspi_pay_link: z
+      .string()
+      .trim()
+      .max(300)
+      .nullable()
+      .transform((v) => v || null)
+      .refine((v) => {
+        if (!v) return true;
+        try {
+          const url = new URL(v);
+          return url.protocol === "https:" && (url.hostname === "kaspi.kz" || url.hostname.endsWith(".kaspi.kz"));
+        } catch {
+          return false;
+        }
+      }, "Ссылка должна вести на kaspi.kz (https)"),
     cta_text: z.string().trim().min(2).max(40),
     confirmation_text: z.string().trim().min(5).max(500),
   }),

@@ -31,7 +31,7 @@ export async function getPublicState(): Promise<PublicState> {
     paid,
     seatsLeft,
     soldOut: seatsLeft === 0,
-    paymentAvailable: Boolean(settings.qr_active && settings.kaspi_qr_key),
+    paymentAvailable: Boolean(settings.qr_active && (settings.kaspi_qr_key || settings.kaspi_pay_link)),
     testimonials,
   };
 }

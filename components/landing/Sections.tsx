@@ -237,9 +237,6 @@ export function Organizers({ state }: { state: PublicState }) {
           <p>
             {event.format}. Формат {event.event_type.toLowerCase()} — для тех, кто стартует с нуля.
           </p>
-          <p className="mt-3">
-            📅 {formatDate(event.date)} · ⏰ {event.time} · 📍 {event.address}
-          </p>
         </div>
       </div>
     </section>

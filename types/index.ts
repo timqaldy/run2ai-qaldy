@@ -29,6 +29,7 @@ export type Settings = {
   ticket_message_template: string;
   payment_instructions: string;
   kaspi_qr_key: string | null;
+  kaspi_pay_link: string | null;
   qr_active: boolean;
   hero_image_key: string | null;
   cta_text: string;

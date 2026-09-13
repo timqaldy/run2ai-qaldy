@@ -71,6 +71,7 @@ export function SettingsForm({
             ticket_message_template: settings.ticket_message_template,
             payment_instructions: settings.payment_instructions,
             qr_active: settings.qr_active,
+            kaspi_pay_link: settings.kaspi_pay_link,
             cta_text: settings.cta_text,
             confirmation_text: settings.confirmation_text,
           },
@@ -134,12 +135,20 @@ export function SettingsForm({
       </Card>
 
       <Card title="Оплата · Kaspi QR">
-        <ImageSetting kind="qr" label="Kaspi QR Image" value={settings.kaspi_qr_key} onChange={(key) => st("kaspi_qr_key", key)} onStatus={setStatus} />
+        <Field label="Ссылка на оплату Kaspi" hint="Например https://pay.kaspi.kz/pay/… — на телефоне откроется кнопка «Оплатить в Kaspi». Если QR-картинка не загружена, QR сгенерируется из этой ссылки.">
+          <input
+            className={input}
+            placeholder="https://pay.kaspi.kz/pay/..."
+            value={settings.kaspi_pay_link ?? ""}
+            onChange={(e) => st("kaspi_pay_link", e.target.value || null)}
+          />
+        </Field>
+        <ImageSetting kind="qr" label="Kaspi QR Image (необязательно, если есть ссылка)" value={settings.kaspi_qr_key} onChange={(key) => st("kaspi_qr_key", key)} onStatus={setStatus} />
         <label className="flex items-center gap-3 text-sm font-semibold">
           <input type="checkbox" className="size-5 accent-[#00AEEF]" checked={settings.qr_active} onChange={(e) => st("qr_active", e.target.checked)} />
           QR активен {settings.qr_active ? "(ON)" : "(OFF)"}
         </label>
-        {!settings.kaspi_qr_key || !settings.qr_active ? (
+        {!(settings.kaspi_qr_key || settings.kaspi_pay_link) || !settings.qr_active ? (
           <p className="rounded-xl bg-amber-400/10 px-3 py-2 text-sm text-amber-200">
             Сейчас клиенты увидят: «Оплата временно недоступна. Напишите нам в WhatsApp.»
           </p>

@@ -24,6 +24,7 @@ export const defaultSettings: Settings = {
     "Оплата подтверждена ✅\n\nВы зарегистрированы на:\n\n{event_upper} — {type_upper}\n\n📅 {date}\n⏰ {time}\n\nВаш билет: {ticket_url}\n\nДо встречи!",
   payment_instructions: "Оплатите 10 000 ₸ и отправьте чек нам в WhatsApp.",
   kaspi_qr_key: null,
+  kaspi_pay_link: null,
   qr_active: true,
   hero_image_key: null,
   cta_text: "Записаться",

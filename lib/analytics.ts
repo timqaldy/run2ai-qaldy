@@ -5,6 +5,7 @@ export type TrackingEvent =
   | "registration_completed"
   | "payment_screen_opened"
   | "whatsapp_receipt_click"
+  | "kaspi_pay_click"
   | "payment_confirmed"
   | "ticket_sent";
 

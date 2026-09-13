@@ -179,18 +179,35 @@ export function FunnelModal({ state, onClose }: { state: PublicState; onClose: (
             <h2 id="funnel-title" className="mt-1 font-display text-2xl font-black leading-tight">
               Оплатите {price} через Kaspi
             </h2>
-            {state.paymentAvailable && settings.kaspi_qr_key ? (
+            {state.paymentAvailable ? (
               <>
-                <div className="mx-auto mt-5 w-full max-w-[280px] rounded-2xl bg-white p-3 glow">
+                {settings.kaspi_pay_link ? (
+                  <a
+                    href={settings.kaspi_pay_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => track("kaspi_pay_click")}
+                    className="mt-5 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#F14635] px-4 text-center font-display text-base font-black uppercase text-white shadow-[0_10px_30px_-8px_rgba(241,70,53,.7)] hover:brightness-110"
+                  >
+                    Оплатить {price} в Kaspi
+                  </a>
+                ) : null}
+                <div className="mx-auto mt-5 w-full max-w-[220px] rounded-2xl bg-white p-3 glow sm:max-w-[260px]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={fileUrl(settings.kaspi_qr_key) ?? ""}
+                    src={settings.kaspi_qr_key ? (fileUrl(settings.kaspi_qr_key) ?? "") : "/api/pay-qr"}
                     alt="Kaspi QR для оплаты"
                     className="aspect-square w-full object-contain"
                   />
                 </div>
+                {settings.kaspi_pay_link ? (
+                  <p className="mt-2 text-center text-xs text-mist">С компьютера — отсканируйте QR в приложении Kaspi</p>
+                ) : null}
                 <ol className="mt-5 grid grid-cols-2 gap-2 text-sm">
-                  {["Откройте Kaspi", "Отсканируйте QR", `Оплатите ${price}`, "Отправьте чек в WhatsApp"].map(
+                  {(settings.kaspi_pay_link
+                    ? ["Нажмите «Оплатить в Kaspi»", `Оплатите ${price}`, "Сохраните чек", "Отправьте чек в WhatsApp"]
+                    : ["Откройте Kaspi", "Отсканируйте QR", `Оплатите ${price}`, "Отправьте чек в WhatsApp"]
+                  ).map(
                     (text, i) => (
                       <li key={text} className="flex items-center gap-2 rounded-xl bg-white/5 px-3 py-2">
                         <span className="grid size-6 shrink-0 place-items-center rounded-full bg-electric text-xs font-black text-night">

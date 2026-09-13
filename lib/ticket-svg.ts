@@ -6,7 +6,7 @@ function esc(value: string) {
   return value.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string);
 }
 
-function qrPath(text: string, x: number, y: number, size: number) {
+export function qrPath(text: string, x: number, y: number, size: number) {
   const qr = QRCode.create(text, { errorCorrectionLevel: "M" });
   const count = qr.modules.size;
   const cell = size / count;
