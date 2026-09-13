@@ -9,7 +9,7 @@ export const defaultEvent: EventInfo = {
   format: "Прогон программы по вайбкодингу",
   date: "2026-09-13",
   time: "18:00",
-  address: "В личку после регистрации",
+  address: "г. Астана — точный адрес в личку после регистрации",
   capacity: 10,
   price: 10000,
   currency: "₸",

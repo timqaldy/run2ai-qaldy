@@ -283,7 +283,7 @@ export function FinalCta({ state }: { state: PublicState }) {
         <Image src="/brand/s-zapis.webp" alt="Запись" width={400} height={123} className="h-auto w-[min(70vw,300px)]" />
       </div>
       <p className="mx-auto mt-4 max-w-xl text-lg text-mist">
-        {formatDate(event.date)} в {event.time}. Адрес — {event.address.toLowerCase()}.
+        {formatDate(event.date)} в {event.time}. Адрес: {event.address}.
       </p>
       <CtaButton source="final" withPrice className="mt-6 w-full md:w-auto md:min-w-96" />
       <SeatsLine state={state} className="mt-3" />

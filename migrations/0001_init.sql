@@ -65,4 +65,4 @@ CREATE TABLE IF NOT EXISTS testimonials (
 
 INSERT OR IGNORE INTO events (id, name, event_type, format, date, time, address, capacity, price, currency, organizers)
 VALUES ('probezhka-beginner', 'Пробежка по ИИ-шкам', 'Beginner', 'Прогон программы по вайбкодингу',
-        '2026-09-13', '18:00', 'В личку после регистрации', 10, 10000, '₸', 'Таир + Тимур');
+        '2026-09-13', '18:00', 'г. Астана — точный адрес в личку после регистрации', 10, 10000, '₸', 'Таир + Тимур');
