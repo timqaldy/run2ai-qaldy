@@ -53,7 +53,9 @@ export function Hero({ state }: { state: PublicState }) {
         />
         <div className="relative z-10 -mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
           <Image src="/brand/beginner.webp" alt="" width={700} height={165} priority className="h-auto w-[46%] max-w-[260px]" />
-          <Image src="/brand/progon.webp" alt="" width={600} height={122} className="h-auto w-[46%] max-w-[250px]" />
+          <span className="inline-flex w-[46%] max-w-[250px] -rotate-1 items-center justify-center rounded-xl bg-white px-3 py-2 text-center font-display text-[13px] font-black uppercase italic leading-tight text-night shadow-[0_4px_0_rgba(0,0,0,.35)] min-[400px]:text-base md:text-xl">
+            Online Workshop
+          </span>
         </div>
         <p className="mt-1 text-base font-semibold text-white/90 md:mt-4 md:text-xl">
           <span className="text-cyan">Вайбкодинг</span> с нуля.
