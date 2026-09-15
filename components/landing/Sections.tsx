@@ -156,7 +156,54 @@ export function ForWhom() {
   );
 }
 
-export function Program() {
+const SCHEDULE = [
+  { time: "10:00–10:20", icon: "💡", title: "Разгон идей", text: "Проблема → 10 идей → 1 сильная идея" },
+  { time: "10:20–10:35", icon: "🖥️", title: "Примеры проектов", text: "Демонстрация кейсов из Project.qaldy.com" },
+  { time: "10:35–10:50", icon: "🎯", title: "Выбор MVP", text: "Для кого? Что делает? 3 функции максимум" },
+  { time: "10:50–11:50", icon: "⌨️", title: "Build Sprint", text: "Собираем первую рабочую версию вместе с AI" },
+  { time: "11:50–12:10", icon: "🛠️", title: "Fix + Test", text: "Исправляем ошибки и улучшаем результат" },
+  { time: "12:10–12:30", icon: "🚀", title: "Deploy + Demo", text: "Публикация, ссылка и короткая демонстрация" },
+];
+
+function Schedule({ event }: { event: PublicState["event"] }) {
+  return (
+    <div className="mt-10">
+      <p className="font-display text-2xl font-black uppercase italic md:text-3xl">
+        Программа <span className="brush text-cyan">Workshop</span>
+      </p>
+      <p className="mt-1 inline-flex items-center gap-2 rounded-full bg-amber-400 px-4 py-1.5 font-display text-sm font-black text-night md:text-base">
+        🕐 {event.time} — {addMinutes(event.time, 150)}
+      </p>
+      <ol className="relative mt-5 grid gap-3 border-l-2 border-cyan/30 pl-5 md:gap-4 md:pl-7">
+        {SCHEDULE.map((step) => (
+          <li key={step.time} className="relative grunge flex items-center gap-4 rounded-2xl border border-white/10 bg-deep p-4">
+            <span className="absolute -left-[27px] top-1/2 size-3 -translate-y-1/2 rounded-full bg-electric ring-4 ring-night md:-left-[35px]" aria-hidden />
+            <span className="hidden shrink-0 text-3xl sm:block" aria-hidden>{step.icon}</span>
+            <div className="min-w-0">
+              <p className="font-display text-sm font-black text-cyan md:text-base">{step.time}</p>
+              <p className="font-display text-lg font-black md:text-xl">{step.title}</p>
+              <p className="text-sm text-mist md:text-base">{step.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p className="mt-5 flex flex-wrap items-center gap-2 rounded-2xl border border-amber-300/40 bg-amber-400/10 px-4 py-3 font-display text-sm font-black uppercase md:text-base">
+        🏆 Идея → MVP → Ссылка ·{" "}
+        <span className="text-amber-300">Результат: свой первый работающий AI-продукт</span>
+      </p>
+    </div>
+  );
+}
+
+function addMinutes(time: string, minutes: number) {
+  const [h, m] = time.split(":").map(Number);
+  const total = h * 60 + m + minutes;
+  const hh = Math.floor(total / 60) % 24;
+  const mm = total % 60;
+  return `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
+}
+
+export function Program({ state }: { state: PublicState }) {
   const track = ["IDEA", "PROMPT", "AI", "CODE", "MVP"];
   const steps = [
     "Формулируем идею.",
@@ -189,6 +236,7 @@ export function Program() {
       <p className="mt-8 font-display text-3xl font-black uppercase italic md:text-5xl">
         Вы не смотрите. <span className="brush text-cyan">Вы делаете.</span>
       </p>
+      <Schedule event={state.event} />
     </section>
   );
 }
@@ -253,11 +301,33 @@ export function Organizers({ state }: { state: PublicState }) {
   );
 }
 
+const VIDEO_TESTIMONIAL = { src: "/video/otzyv.mp4", poster: "/video/otzyv-poster.jpg" };
+
+function VideoTestimonial() {
+  return (
+    <div className="mx-auto max-w-xs">
+      <video
+        src={VIDEO_TESTIMONIAL.src}
+        poster={VIDEO_TESTIMONIAL.poster}
+        controls
+        playsInline
+        preload="metadata"
+        className="aspect-[9/16] w-full rounded-3xl border border-white/10 bg-black object-cover glow"
+      >
+        Ваш браузер не поддерживает видео.
+      </video>
+      <p className="mt-3 text-center text-sm text-mist">Видео-отзыв участника тренировки</p>
+    </div>
+  );
+}
+
 export function Testimonials({ state }: { state: PublicState }) {
-  if (!state.testimonials.length) return null;
+  if (!state.testimonials.length && !VIDEO_TESTIMONIAL.src) return null;
   return (
     <section className="mx-auto max-w-6xl px-4 py-10 md:px-8 md:py-16">
       <h2 className="font-display text-4xl font-black uppercase italic">Отзывы</h2>
+      <VideoTestimonial />
+      {state.testimonials.length ? (
       <div className="mt-6 grid gap-4 md:grid-cols-3">
         {state.testimonials.map((t) => (
           <figure key={t.id} className="rounded-3xl border border-white/10 bg-deep p-6">
@@ -278,6 +348,7 @@ export function Testimonials({ state }: { state: PublicState }) {
           </figure>
         ))}
       </div>
+      ) : null}
     </section>
   );
 }

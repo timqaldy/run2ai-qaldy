@@ -28,7 +28,7 @@ export default async function Home() {
         <Hero state={state} />
         <Pitch />
         <ForWhom />
-        <Program />
+        <Program state={state} />
         <Pricing state={state} />
         <Organizers state={state} />
         <Testimonials state={state} />
