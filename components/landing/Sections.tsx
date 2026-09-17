@@ -90,8 +90,8 @@ export function Hero({ state }: { state: PublicState }) {
           <Image
             src="/brand/duo.webp"
             alt={`Организаторы: ${event.organizers}`}
-            width={1000}
-            height={673}
+            width={941}
+            height={865}
             priority
             className="fade-bottom h-[40svh] max-h-[400px] w-auto max-w-full object-contain md:h-auto md:max-h-none md:w-full"
           />

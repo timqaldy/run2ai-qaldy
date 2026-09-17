@@ -9,7 +9,7 @@ export const defaultEvent: EventInfo = {
   format: "Online Workshop",
   date: "2026-09-19",
   time: "10:00",
-  address: "г. Астана — точный адрес в личку после регистрации",
+  address: "По многочисленным просьбам теперь в онлайн.",
   capacity: 15,
   price: 10000,
   currency: "₸",
