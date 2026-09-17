@@ -156,13 +156,14 @@ export function ForWhom() {
   );
 }
 
+const TOTAL_MINUTES = 150;
 const SCHEDULE = [
-  { time: "10:00–10:20", icon: "💡", title: "Разгон идей", text: "Проблема → 10 идей → 1 сильная идея" },
-  { time: "10:20–10:35", icon: "🖥️", title: "Примеры проектов", text: "Демонстрация кейсов из Project.qaldy.com" },
-  { time: "10:35–10:50", icon: "🎯", title: "Выбор MVP", text: "Для кого? Что делает? 3 функции максимум" },
-  { time: "10:50–11:50", icon: "⌨️", title: "Build Sprint", text: "Собираем первую рабочую версию вместе с AI" },
-  { time: "11:50–12:10", icon: "🛠️", title: "Fix + Test", text: "Исправляем ошибки и улучшаем результат" },
-  { time: "12:10–12:30", icon: "🚀", title: "Deploy + Demo", text: "Публикация, ссылка и короткая демонстрация" },
+  { from: 0, to: 20, icon: "💡", title: "Разгон идей", text: "Проблема → 10 идей → 1 сильная идея" },
+  { from: 20, to: 35, icon: "🖥️", title: "Примеры проектов", text: "Демонстрация кейсов из Project.qaldy.com" },
+  { from: 35, to: 50, icon: "🎯", title: "Выбор MVP", text: "Для кого? Что делает? 3 функции максимум" },
+  { from: 50, to: 110, icon: "⌨️", title: "Build Sprint", text: "Собираем первую рабочую версию вместе с AI" },
+  { from: 110, to: 130, icon: "🛠️", title: "Fix + Test", text: "Исправляем ошибки и улучшаем результат" },
+  { from: 130, to: TOTAL_MINUTES, icon: "🚀", title: "Deploy + Demo", text: "Публикация, ссылка и короткая демонстрация" },
 ];
 
 function Schedule({ event }: { event: PublicState["event"] }) {
@@ -172,20 +173,23 @@ function Schedule({ event }: { event: PublicState["event"] }) {
         Программа <span className="brush text-cyan">Workshop</span>
       </p>
       <p className="mt-1 inline-flex items-center gap-2 rounded-full bg-amber-400 px-4 py-1.5 font-display text-sm font-black text-night md:text-base">
-        🕐 {event.time} — {addMinutes(event.time, 150)}
+        🕐 {event.time} — {addMinutes(event.time, TOTAL_MINUTES)}
       </p>
       <ol className="relative mt-5 grid gap-3 border-l-2 border-cyan/30 pl-5 md:gap-4 md:pl-7">
-        {SCHEDULE.map((step) => (
-          <li key={step.time} className="relative grunge flex items-center gap-4 rounded-2xl border border-white/10 bg-deep p-4">
-            <span className="absolute -left-[27px] top-1/2 size-3 -translate-y-1/2 rounded-full bg-electric ring-4 ring-night md:-left-[35px]" aria-hidden />
-            <span className="hidden shrink-0 text-3xl sm:block" aria-hidden>{step.icon}</span>
-            <div className="min-w-0">
-              <p className="font-display text-sm font-black text-cyan md:text-base">{step.time}</p>
-              <p className="font-display text-lg font-black md:text-xl">{step.title}</p>
-              <p className="text-sm text-mist md:text-base">{step.text}</p>
-            </div>
-          </li>
-        ))}
+        {SCHEDULE.map((step) => {
+          const label = `${addMinutes(event.time, step.from)}–${addMinutes(event.time, step.to)}`;
+          return (
+            <li key={step.title} className="relative grunge flex items-center gap-4 rounded-2xl border border-white/10 bg-deep p-4">
+              <span className="absolute -left-[27px] top-1/2 size-3 -translate-y-1/2 rounded-full bg-electric ring-4 ring-night md:-left-[35px]" aria-hidden />
+              <span className="hidden shrink-0 text-3xl sm:block" aria-hidden>{step.icon}</span>
+              <div className="min-w-0">
+                <p className="font-display text-sm font-black text-cyan md:text-base">{label}</p>
+                <p className="font-display text-lg font-black md:text-xl">{step.title}</p>
+                <p className="text-sm text-mist md:text-base">{step.text}</p>
+              </div>
+            </li>
+          );
+        })}
       </ol>
       <p className="mt-5 flex flex-wrap items-center gap-2 rounded-2xl border border-amber-300/40 bg-amber-400/10 px-4 py-3 font-display text-sm font-black uppercase md:text-base">
         🏆 Идея → MVP → Ссылка ·{" "}

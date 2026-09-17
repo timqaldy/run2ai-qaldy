@@ -75,6 +75,6 @@ on conflict (id) do nothing;
 
 -- Seed current event
 insert into public.events (id, name, event_type, format, date, time, address, capacity, price, currency, organizers)
-values ('probezhka-beginner', 'Пробежка по ИИ-шкам', 'Beginner', 'Прогон программы по вайбкодингу',
-        '2026-09-13', '18:00', 'По многочисленным просьбам теперь в онлайн.', 10, 10000, '₸', 'Таир + Тимур')
+values ('probezhka-beginner', 'Пробежка по ИИ-шкам', 'Beginner', 'Online Workshop',
+        '2026-09-19', '15:00', 'По многочисленным просьбам теперь в онлайн.', 15, 10000, '₸', 'Таир + Тимур')
 on conflict (id) do nothing;

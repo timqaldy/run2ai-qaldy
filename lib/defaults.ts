@@ -8,7 +8,7 @@ export const defaultEvent: EventInfo = {
   event_type: "Beginner",
   format: "Online Workshop",
   date: "2026-09-19",
-  time: "10:00",
+  time: "15:00",
   address: "По многочисленным просьбам теперь в онлайн.",
   capacity: 15,
   price: 10000,
